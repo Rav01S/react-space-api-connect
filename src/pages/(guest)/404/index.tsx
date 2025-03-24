@@ -6,7 +6,7 @@ export default function Page404() {
   return (
     <>
       <h1>404 Ошибка - Страница не найдена</h1>
-      <button onClick={() => navigate('/')}>На главную</button>
+      <button className="btn" onClick={() => navigate('/')}>На главную</button>
     </>
   );
 }

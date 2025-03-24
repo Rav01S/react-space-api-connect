@@ -10,6 +10,7 @@ import RacesPage from "../pages/(authed)/races";
 import RacesAdd from "../pages/(authed)/races/add";
 import SearchPage from "../pages/(authed)/search";
 import AddMissionsPage from "../pages/(authed)/missions/add";
+import Page404 from "../pages/(guest)/404/index.tsx";
 
 export const router = createBrowserRouter([
   {
@@ -48,6 +49,10 @@ export const router = createBrowserRouter([
         path: '/logout',
         element: <LogoutPage/>
       },
+      {
+        path: '/*',
+        element: <Page404 />
+      }
     ]
   },
   {
@@ -61,6 +66,10 @@ export const router = createBrowserRouter([
       {
         path: '/register',
         element: <RegisterPage/>
+      },
+      {
+        path: '/*',
+        element: <Page404 />
       }
     ]
   }
