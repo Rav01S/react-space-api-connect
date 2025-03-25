@@ -79,15 +79,12 @@ export const API = {
     axiosClient.delete(`/lunar-missions/${id}`),
 
   updateMission: (id: number | string, values: MissionUpdatePayload) =>
-    axiosClient.patch(`/lunar-missions/${id}`, values),
-
-  addMission: (values: MissionAddPayload) =>
-    axiosClient.post(`/lunar-missions`, {
+    axiosClient.patch(`/lunar-missions/${id}`, {
       mission: {
         name: values.name,
         launch_details: {
           launch_date: values.launch_date,
-          launch_cite: {
+          launch_site: {
             name: values.launch_name,
             location: {
               latitude: values.launch_location_latitude,
@@ -97,7 +94,39 @@ export const API = {
         },
         landing_details: {
           landing_date: values.landing_date,
-          landing_cite: {
+          landing_site: {
+            name: values.landing_name,
+            coordinates: {
+              latitude: values.landing_coordinates_latitude,
+              longitude: values.landing_coordinates_longitude,
+            }
+          }
+        },
+        spacecraft: {
+          command_module: values.command_module,
+          lunar_module: values.lunar_module,
+          crew: values.crew
+        }
+      }
+    }),
+
+  addMission: (values: MissionAddPayload) =>
+    axiosClient.post(`/lunar-missions`, {
+      mission: {
+        name: values.name,
+        launch_details: {
+          launch_date: values.launch_date,
+          launch_site: {
+            name: values.launch_name,
+            location: {
+              latitude: values.launch_location_latitude,
+              longitude: values.launch_location_longitude,
+            }
+          }
+        },
+        landing_details: {
+          landing_date: values.landing_date,
+          landing_site: {
             name: values.landing_name,
             coordinates: {
               latitude: values.landing_coordinates_latitude,
@@ -124,6 +153,12 @@ export const API = {
 
   searchFlights: (query: string) =>
     axiosClient.get(`/search?Query=${query}`),
+
+  createWatermark: (values: {file: File | null, text: string}) =>
+    axiosClient.post(`/lunar-watermark`, {
+      file: values.file,
+      text: values.text
+    }),
 }
 
 export type SearchData = {

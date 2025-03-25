@@ -1,6 +1,6 @@
-import {FormEvent, useState} from "react";
+import {FormEvent, useEffect, useState} from "react";
 import {API} from "../../../../shared/api/api.ts";
-import {useNavigate} from "react-router-dom";
+import {Navigate, useNavigate, useParams} from "react-router-dom";
 import {AxiosError} from "axios";
 import Error from "../../../../shared/components/Error";
 
@@ -37,17 +37,58 @@ const initialState = {
   command_module: ''
 }
 
-export default function AddMissionsPage() {
+export default function EditMissionsPage() {
+  const {id} = useParams();
   const [formState, setFormState] = useState<Partial<FormData>>({})
   const [isLoading, setIsLoading] = useState(false)
-  const [errors, setErrors] = useState<Partial<FormData & {crewArr: string}>>({})
+  const [errors, setErrors] = useState<Partial<FormData & { crewArr: string }>>({})
+
+  const [data, setData] = useState<null | FormData>(null)
 
   const navigate = useNavigate();
 
   const formData = {
     ...initialState,
+    ...data,
     ...formState,
   }
+
+  const getMissions = () =>
+    API.getMissions()
+      .then(res => {
+        if (res.status !== 200)
+          throw res;
+
+        const mission = res.data.find(mission => mission.mission.id === Number(id))?.mission;
+
+        if (!mission)
+          return <Navigate to={'/404'}/>
+
+        setData({
+          name: mission.name,
+          launch_date: mission.launch_details.launch_date,
+          launch_name: mission.launch_details.launch_site.name,
+          launch_location_latitude: mission.launch_details.launch_site.location.latitude,
+          launch_location_longitude: mission.launch_details.launch_site.location.longitude,
+          landing_date: mission.landing_details.landing_date,
+          landing_name: mission.landing_details.landing_site.name,
+          landing_coordinates_latitude: mission.landing_details.landing_site.coordinates.latitude,
+          landing_coordinates_longitude: mission.landing_details.landing_site.coordinates.longitude,
+          crew: mission.spacecraft.crew,
+          lunar_module: mission.spacecraft.lunar_module,
+          command_module: mission.spacecraft.command_module
+        })
+      })
+      .catch(err => {
+        console.log(err);
+      });
+
+  useEffect(() => {
+    getMissions()
+  }, [])
+
+  if (!id)
+    return <Navigate to={'/404'}/>;
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -55,9 +96,9 @@ export default function AddMissionsPage() {
     setErrors({})
 
     try {
-      const res = await API.addMission(formData)
+      const res = await API.updateMission(id, formData)
 
-      if (res.status !== 201) {
+      if (res.status !== 200) {
         throw res;
       }
 
@@ -131,18 +172,13 @@ export default function AddMissionsPage() {
   const removeCrewMember = (index: number) => {
     const newCrew = [...formData.crew];
     newCrew.splice(index, 1);
-
-    const newErrors = {...errors};
-    newErrors?.crew?.splice(index, 1);
-
     onFormStateChange('crew', newCrew);
-    setErrors(newErrors)
   }
 
   return (
     <>
       <form onSubmit={onSubmit} className="form">
-        <h1>Добавить миссию</h1>
+        <h1>Изменить миссию</h1>
         <button type={"button"} onClick={() => navigate('/missions')} className="btn">К списку миссий</button>
         <div className="inputBx">
           <label htmlFor="name">Название миссии</label>
@@ -272,7 +308,7 @@ export default function AddMissionsPage() {
         </div>
 
         <button disabled={isLoading} className={"btn"}>
-          {isLoading ? "Добавляем" : "Добавить"}
+          {isLoading ? "Изменяем..." : "Изменить"}
         </button>
       </form>
     </>

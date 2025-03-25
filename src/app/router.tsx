@@ -11,6 +11,8 @@ import RacesAdd from "../pages/(authed)/races/add";
 import SearchPage from "../pages/(authed)/search";
 import AddMissionsPage from "../pages/(authed)/missions/add";
 import Page404 from "../pages/(guest)/404/index.tsx";
+import EditMissionsPage from "../pages/(authed)/missions/edit";
+import LunarWatermarkPage from "../pages/(authed)/lunar-watermark";
 
 export const router = createBrowserRouter([
   {
@@ -31,11 +33,15 @@ export const router = createBrowserRouter([
       },
       {
         path: '/missions/:id/edit',
-        element: <></>
+        element: <EditMissionsPage />
       },
       {
         path: '/races',
         element: <RacesPage/>
+      },
+      {
+        path: '/watermark',
+        element: <LunarWatermarkPage/>
       },
       {
         path: '/races/add',

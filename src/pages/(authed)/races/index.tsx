@@ -64,7 +64,7 @@ export default function RacesPage() {
       </div>
       {
         racesData?.map(race => (
-          <div>
+          <div key={race.flight_number}>
             <h2>Номер полёта: {race.flight_number}</h2>
             <p>Место назначения: {race.destination}</p>
             <p>Дата отправления: {race.launch_date}</p>

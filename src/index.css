@@ -82,7 +82,7 @@ main .container {
     gap: 10px;
 }
 
-.inputBx .error {
+.error {
     color: red;
     font-size: 0.75rem;
 }

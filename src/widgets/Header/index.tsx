@@ -32,6 +32,11 @@ export default function Header() {
                   </Link>
                 </li>
                 <li className="header__nav-item">
+                  <Link to={"/watermark"} className="header__nav-link">
+                    Заказы на луне
+                  </Link>
+                </li>
+                <li className="header__nav-item">
                   <Link to={"/logout"} className="header__nav-link">
                     Выход
                   </Link>
